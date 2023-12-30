@@ -13,7 +13,7 @@ local function serverHop(id)
 	})
 	local body = HttpService:JSONDecode(req.Body)
 	if id == 15502339080 then
-		deep = math.random(2, 4)
+		deep = math.random(1, 2)
 	else
 		deep = 1
 	end
