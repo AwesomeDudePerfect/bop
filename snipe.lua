@@ -135,9 +135,13 @@ local function checkListing(uid, cost, item, version, shiny, amount, username, p
 		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
+	elseif cost <= 2 then
+		startTick = os.clock()
+		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+		endTick = os.clock() - startTick
+		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	end
 end
-
 
 local Booths_Broadcast = game:GetService("ReplicatedStorage").Network:WaitForChild("Booths_Broadcast")
 Booths_Broadcast.OnClientEvent:Connect(function(username, message)
