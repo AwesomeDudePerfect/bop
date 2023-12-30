@@ -24,7 +24,7 @@ local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, b
 	if boughtStatus then
 		webColor = tonumber(0x32CD32)
 		webUrl = snipeSuccess
-		title = "Sniped " ..item.. " | Took: "
+		title = "Sniped " ..item.. " | Took: " ..timeTook
 		if mention then
 			webContent = "<@569768504014929930>"
 		else
@@ -33,14 +33,14 @@ local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, b
 	else
 		webUrl = snipeFail
 		webColor = tonumber(0xFF0000)
-		title = "Failed to Snipe!"
+		title = "Failed to Snipe " ..item
 	end
 	
 	local message = {
 		['content'] = webContent,
 		['embeds'] = {
 			{
-				['title'] = title ..tostring(timeTook),
+				['title'] = title,
 				['color'] = webColor,
 				['timestamp'] = DateTime.now():ToIsoDate(),
 				['fields'] = {
