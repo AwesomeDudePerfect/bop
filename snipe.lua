@@ -4,6 +4,7 @@ until game:IsLoaded()
 
 wait(30)
 
+local osclock = os.clock()
 local Players = game:GetService("Players")
 local getPlayers = Players:GetPlayers()
 local PlayerInServer = #getPlayers
