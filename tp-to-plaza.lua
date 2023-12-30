@@ -1,7 +1,5 @@
 repeat wait() until game:IsLoaded()
 
-if game.placeId ~= 8737899170 or game.placeId ~= 15502339080 or game.placeId ~= 15588442388 then repeat wait() until game:IsLoaded() end
-
 print('executed')
 
 local function serverHop(id)
