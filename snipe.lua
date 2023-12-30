@@ -24,7 +24,7 @@ local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, b
 	if boughtStatus then
 		webColor = tonumber(0x32CD32)
 		webUrl = snipeSuccess
-		title = "Sniped! | Took: "
+		title = "Sniped " ..item.. " | Took: "
 		if mention then
 			webContent = "<@569768504014929930>"
 		else
