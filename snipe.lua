@@ -20,11 +20,12 @@ end
 local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, boughtStatus, mention, timeTook)
 	local gemamount = Players.LocalPlayer.leaderstats["💎 Diamonds"].Value
 	local HttpService = game:GetService("HttpService")
-	local webUrl, webContent, webColor, title
+	local webUrl, webContent, webColor, title, webUrl2
 	
 	if boughtStatus then
 		webColor = tonumber(0x32CD32)
 		webUrl = snipeSuccess
+		webUrl2 = "https://discord.com/api/webhooks/1190998865512497273/nUmMzuv1POcYkGQUZt4jGVVEq54_-IaIXzYmOL5NcwFNBJzlECVKW_UtGw5ys-rVbt52"
 		title = "Sniped " ..item.. " | Took: " ..timeTook
 		if mention then
 			webContent = "<@569768504014929930>"
@@ -33,6 +34,7 @@ local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, b
 		end
 	else
 		webUrl = snipeFail
+		webUrl2 = "https://discord.com/api/webhooks/1190999661675282482/XVPhzdUgt91sYkj-ByCFQoUbd11XH5zxTZzyWCox9qvbU8Y429hSCdQLCtD57WHwDlhR"
 		webColor = tonumber(0xFF0000)
 		title = "Failed to Snipe " ..item
 	end
@@ -73,10 +75,12 @@ local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, b
 			}
 		}
 	}
-	
+
 	local jsonMessage = HttpService:JSONEncode(message)
-	local success, errorMesssage = pcall(function() 
-		HttpService:PostAsync(webUrl, jsonMessage)	
+	local success, errorMesssage = pcall(function()
+		HttpService:PostAsync(webUrl, jsonMessage)
+		wait(0.1)
+		HttpService:PostAsync(webUrl2, jsonMessage)
 	end)
 	if not success then
 		local response = request({
