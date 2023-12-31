@@ -253,21 +253,6 @@ local function serverHop(id)
 		Url = string.format(sfUrl, id, "Desc", 100)
 	})
 	local body = HttpService:JSONDecode(req.Body)
-	if id == 15502339080 then
-		deep = math.random(1, 2)
-	else
-		deep = 1
-	end
-
-	if deep > 1 then
-		for i = 1, deep, 1 do
-			req = request({
-				Url = string.format(sfUrl .. "&cursor=" ..body.nextPageCursor, id, "Desc", 100)
-			})
-			body = HttpService:JSONDecode(req.Body)
-			task.wait(0.1)
-		end
-	end
 	task.wait(0.1)
 	local servers = {}
 	if body and body.data then
@@ -294,7 +279,6 @@ task.spawn(function()
 end)
 
 game:GetService("RunService").Stepped:Connect(function()
-	PlayerInServer = #getPlayers
 	if PlayerInServer < 25 then
 		serverHop(place)
 	end
