@@ -136,15 +136,9 @@ local function checkListing(uid, cost, item, version, shiny, amount, username, p
 		endTick = os.clock() - startTick
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif item == "Titanic Christmas Present" and cost <= 50000 then
-		startTick = os.clock()
-		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
-		endTick = os.clock() - startTick
-		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
+		ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 	elseif cost <= 2 then
-		startTick = os.clock()
-		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
-		endTick = os.clock() - startTick
-		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
+		ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 	end
 end
 
@@ -197,7 +191,7 @@ local function teleport(x, y, z)
 		humanoidRootPart.CFrame = CFrame.new(Vector3.new(x, y, z))
 	end
 end
-
+teleport(-922, 300, -2338)
 create_platform(-922, 190, -2338)
 local aa = game.Workspace:FindFirstChild("plat")
 repeat
