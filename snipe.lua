@@ -96,7 +96,7 @@ local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, b
 end
 
 local function checkListing(uid, cost, item, version, shiny, amount, username, playerid)
-	wait(3.02)
+	--wait(3.02)
 	local startTick, endTick
 	local ReplicatedStorage = game:GetService("ReplicatedStorage")
 	local Library = require(ReplicatedStorage:WaitForChild('Library'))
@@ -112,33 +112,38 @@ local function checkListing(uid, cost, item, version, shiny, amount, username, p
 	end
 	
 	if type.huge and cost <= 1000000 then
+		wait(3)
 		startTick = os.clock()
-		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+		local buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
 		if buyPet then
 			ping = true
 		end
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif type.exclusiveLevel and not string.find(item, 'Banana') and not string.find(item, 'Coin') and cost <= 10000 then
+		wait(3)
 		startTick = os.clock()
-		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+		local buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif type.titanic and cost <= 1000000 then
+		wait(3)
 		startTick = os.clock()
-		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+		local buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
 		if buyPet then
 			ping = true
 		end
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif string.find(item, 'Exclusive') and cost <= 100000 then
+		wait(3)
 		startTick = os.clock()
-		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+		local buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif cost <= 2 then
-		ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+		local buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+		print(buyPet, errorMessage)
 	end
 end
 
@@ -282,8 +287,8 @@ game:GetService("RunService").Stepped:Connect(function()
 	end
 end)
 
-while task.wait(1) do
-    if math.floor(os.clock() - osclock) >= math.random(900, 1200) then
-        serverHop(place)
-    end
-end
+--while task.wait(1) do
+--    if math.floor(os.clock() - osclock) >= math.random(900, 1200) then
+--        serverHop(place)
+--    end
+--end
