@@ -96,6 +96,7 @@ local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, b
 end
 
 local function checkListing(uid, cost, item, version, shiny, amount, username, playerid)
+	wait(3.02)
 	local startTick, endTick
 	local ReplicatedStorage = game:GetService("ReplicatedStorage")
 	local Library = require(ReplicatedStorage:WaitForChild('Library'))
@@ -111,7 +112,6 @@ local function checkListing(uid, cost, item, version, shiny, amount, username, p
 	end
 	
 	if type.huge and cost <= 1000000 then
-		task.wait(3.05)
 		startTick = os.clock()
 		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
@@ -120,13 +120,11 @@ local function checkListing(uid, cost, item, version, shiny, amount, username, p
 		end
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif type.exclusiveLevel and not string.find(item, 'Banana') and not string.find(item, 'Coin') and cost <= 10000 then
-		task.wait(3.05)
 		startTick = os.clock()
 		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif type.titanic and cost <= 1000000 then
-		task.wait(3.05)
 		startTick = os.clock()
 		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
@@ -135,13 +133,11 @@ local function checkListing(uid, cost, item, version, shiny, amount, username, p
 		end
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif string.find(item, 'Exclusive') and cost <= 100000 then
-		task.wait(3.05)
 		startTick = os.clock()
 		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif cost <= 2 then
-		task.wait(3.05)
 		ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 	end
 end
