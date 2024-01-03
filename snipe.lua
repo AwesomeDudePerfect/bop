@@ -287,8 +287,8 @@ game:GetService("RunService").Stepped:Connect(function()
 	end
 end)
 
---while task.wait(1) do
---    if math.floor(os.clock() - osclock) >= math.random(900, 1200) then
---        serverHop(place)
---    end
---end
+while task.wait(1) do
+    if math.floor(os.clock() - osclock) >= math.random(900, 1200) then
+        serverHop(place)
+    end
+end
