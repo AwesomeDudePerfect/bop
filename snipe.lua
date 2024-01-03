@@ -17,7 +17,7 @@ for i = 1, PlayerInServer do
 	end
 end
 
-local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, boughtStatus, mention, timeTook)
+local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, boughtStatus, mention)
 	local gemamount = Players.LocalPlayer.leaderstats["💎 Diamonds"].Value
     local user = Players.LocalPlayer.Name
 	local HttpService = game:GetService("HttpService")
@@ -27,7 +27,7 @@ local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, b
 		webColor = tonumber(0x32CD32)
 		webUrl = snipeSuccess
 		webUrl2 = "https://discord.com/api/webhooks/1190998865512497273/nUmMzuv1POcYkGQUZt4jGVVEq54_-IaIXzYmOL5NcwFNBJzlECVKW_UtGw5ys-rVbt52"
-		title = user.. " sniped " ..item.. " | Took: " ..timeTook
+		title = user.. " sniped " ..item
 		if mention then
 			webContent = "<@569768504014929930>"
 		else
@@ -67,10 +67,6 @@ local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, b
 					{
 						['name'] = "PETID:",
 						['value'] = tostring(uid),
-					},
-					{
-						['name'] = "TIME TOOK:",
-						['value'] = tostring(timeTook) .. " :clock1:"
 					}
 				}
 			}
@@ -97,7 +93,7 @@ end
 
 local function checkListing(uid, cost, item, version, shiny, amount, username, playerid)
 	--wait(3.02)
-	local startTick, endTick, buyPet, errorMessage
+	local startTick, buyPet, errorMessage
 	local ReplicatedStorage = game:GetService("ReplicatedStorage")
 	local Library = require(ReplicatedStorage:WaitForChild('Library'))
 	cost = tonumber(cost)
@@ -112,38 +108,36 @@ local function checkListing(uid, cost, item, version, shiny, amount, username, p
 	end
 	
 	if type.huge and cost <= 1000000 then
-		wait(3)
-		startTick = os.clock()
-		buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
-		endTick = os.clock() - startTick
+		repeat
+			buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+			wait(0.2)
+		until errorMessage ~= "You cannot buy that yet!"
 		if buyPet then
-			ping = true
+			sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping)
 		end
-		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif type.exclusiveLevel and not string.find(item, 'Banana') and not string.find(item, 'Coin') and cost <= 10000 then
 		repeat
 			buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 			wait(0.2)
 		until errorMessage ~= "You cannot buy that yet!"
 		if buyPet then
-			sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
+			sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping)
 		end
 	elseif type.titanic and cost <= 1000000 then
-		wait(3)
-		startTick = os.clock()
-		buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
-		endTick = os.clock() - startTick
+		repeat
+			buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+			wait(0.2)
+		until errorMessage ~= "You cannot buy that yet!"
 		if buyPet then
-			ping = true
+			sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping)
 		end
-		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif string.find(item, 'Exclusive') and cost <= 100000 then
 		repeat
 			buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 			wait(0.2)
 		until errorMessage ~= "You cannot buy that yet!"
 		if buyPet then
-			sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
+			sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping)
 		end
 	elseif cost <= 2 then
 		repeat
