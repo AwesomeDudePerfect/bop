@@ -142,8 +142,10 @@ local function checkListing(uid, cost, item, version, shiny, amount, username, p
 		endTick = os.clock() - startTick
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif cost <= 2 then
-		local buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
-		print(buyPet, errorMessage)
+		repeat
+			local buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+			wait(0.5)
+		until errorMessage ~= "You cannot buy that yet!"
 	end
 end
 
