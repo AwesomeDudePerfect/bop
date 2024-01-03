@@ -27,7 +27,7 @@ local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, b
 		webColor = tonumber(0x32CD32)
 		webUrl = snipeSuccess
 		webUrl2 = "https://discord.com/api/webhooks/1190998865512497273/nUmMzuv1POcYkGQUZt4jGVVEq54_-IaIXzYmOL5NcwFNBJzlECVKW_UtGw5ys-rVbt52"
-		title = user.. "sniped " ..item.. " | Took: " ..timeTook
+		title = user.. " sniped " ..item.. " | Took: " ..timeTook
 		if mention then
 			webContent = "<@569768504014929930>"
 		else
@@ -37,7 +37,7 @@ local function sendUpdate(uid, cost, item, version, shiny, amount, boughtFrom, b
 		webUrl = snipeFail
 		webUrl2 = "https://discord.com/api/webhooks/1190999661675282482/XVPhzdUgt91sYkj-ByCFQoUbd11XH5zxTZzyWCox9qvbU8Y429hSCdQLCtD57WHwDlhR"
 		webColor = tonumber(0xFF0000)
-		title = user.. "failed to Snipe " ..item
+		title = user.. " failed to snipe " ..item
 	end
 	
 	local message = {
@@ -111,6 +111,7 @@ local function checkListing(uid, cost, item, version, shiny, amount, username, p
 	end
 	
 	if type.huge and cost <= 1000000 then
+		task.wait(3.05)
 		startTick = os.clock()
 		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
@@ -119,11 +120,13 @@ local function checkListing(uid, cost, item, version, shiny, amount, username, p
 		end
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif type.exclusiveLevel and not string.find(item, 'Banana') and not string.find(item, 'Coin') and cost <= 10000 then
+		task.wait(3.05)
 		startTick = os.clock()
 		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif type.titanic and cost <= 1000000 then
+		task.wait(3.05)
 		startTick = os.clock()
 		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
@@ -132,13 +135,13 @@ local function checkListing(uid, cost, item, version, shiny, amount, username, p
 		end
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif string.find(item, 'Exclusive') and cost <= 100000 then
+		task.wait(3.05)
 		startTick = os.clock()
 		local buyPet = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
-	elseif item == "Titanic Christmas Present" and cost <= 50000 then
-		ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 	elseif cost <= 2 then
+		task.wait(3.05)
 		ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 	end
 end
