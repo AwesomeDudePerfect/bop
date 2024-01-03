@@ -97,7 +97,7 @@ end
 
 local function checkListing(uid, cost, item, version, shiny, amount, username, playerid)
 	--wait(3.02)
-	local startTick, endTick
+	local startTick, endTick, buyPet, errorMessage
 	local ReplicatedStorage = game:GetService("ReplicatedStorage")
 	local Library = require(ReplicatedStorage:WaitForChild('Library'))
 	cost = tonumber(cost)
@@ -114,37 +114,41 @@ local function checkListing(uid, cost, item, version, shiny, amount, username, p
 	if type.huge and cost <= 1000000 then
 		wait(3)
 		startTick = os.clock()
-		local buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+		buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
 		if buyPet then
 			ping = true
 		end
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif type.exclusiveLevel and not string.find(item, 'Banana') and not string.find(item, 'Coin') and cost <= 10000 then
-		wait(3)
-		startTick = os.clock()
-		local buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
-		endTick = os.clock() - startTick
-		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
+		repeat
+			buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+			wait(0.2)
+		until errorMessage ~= "You cannot buy that yet!"
+		if buyPet then
+			sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
+		end
 	elseif type.titanic and cost <= 1000000 then
 		wait(3)
 		startTick = os.clock()
-		local buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+		buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 		endTick = os.clock() - startTick
 		if buyPet then
 			ping = true
 		end
 		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
 	elseif string.find(item, 'Exclusive') and cost <= 100000 then
-		wait(3)
-		startTick = os.clock()
-		local buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
-		endTick = os.clock() - startTick
-		sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
+		repeat
+			buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+			wait(0.2)
+		until errorMessage ~= "You cannot buy that yet!"
+		if buyPet then
+			sendUpdate(uid, cost, item, version, shiny, amount, username, buyPet, ping, endTick)
+		end
 	elseif cost <= 2 then
 		repeat
-			local buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
-			wait(0.5)
+			buyPet, errorMessage = ReplicatedStorage.Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
+			wait(0.2)
 		until errorMessage ~= "You cannot buy that yet!"
 	end
 end
