@@ -52,57 +52,57 @@ local Library = require(game.ReplicatedStorage:WaitForChild('Library'))
 	
 local function processListingInfo(uid, gems, item, version, shiny, amount, boughtFrom, boughtPet, class, boughtMessage, ping)
 	local gemamount = Player.leaderstats["💎 Diamonds"] and Player.leaderstats["💎 Diamonds"].Value or 0
-        local versionVal = { [2] = "Rainbow", [1] = "Golden" }
-        local versionStr = versionVal[version] or (version == nil and "Normal" or "")
-        local snipeMessage = string.format("Found a %s%s%s!", versionStr, shiny and " Shiny " or " ", item)
-        local tag = string.find(item, "Huge") and "@everyone" or ""
-        local colourcheck = boughtPet and 0x05ff00 or 0xff000f
+    local versionVal = { [2] = "Rainbow", [1] = "Golden" }
+    local versionStr = versionVal[version] or (version == nil and "Normal" or "")
+    local snipeMessage = string.format("Found a %s%s%s!", versionStr, shiny and " Shiny " or " ", item)
+    local tag = string.find(item, "Huge") and "@everyone" or ""
+    local colourcheck = boughtPet and 0x05ff00 or 0xff000f
 	local failMessage = boughtPet and "Sniped! No errors occured!" or tostring(boughtMessage)
 
-        local message1 = {
-        	['content'] = tag,
-        	['embeds'] = {
-			{
-                		['title'] = snipeMessage,
-                		["color"] = tonumber(colourcheck),
-                		["timestamp"] = DateTime.now():ToIsoDate(),
-                		['fields'] = {
-                			{
-                				['name'] = "*LISTING INFO* :",
-                            			['value'] = string.format("**Price :** %s gems \n**Amount :** %s\n**Seller :** ||%s||\n**Listing ID : ** ||%s||", tostring(gems), tostring(amount or 1), tostring(boughtFrom), tostring(uid)),
-                        		},
-                        		{
-                            			['name'] = "*USER INFO* :",
-                            			['value'] = string.format("**User :** ||%s||\n**Remaining gems :** %s", Player.Name, tostring(gemamount)),
-                        		}, 
-					{
-                            			['name'] = "*SNIPER INFO* :",
-                            			['value'] = string.format("**Status :** %s\n**Ping :** %s ms", failMessage, tostring(ping)),
-                        		}, 
+    local message1 = {
+    	['content'] = tag,
+    	['embeds'] = {
+		{
+			['title'] = snipeMessage,
+            ["color"] = tonumber(colourcheck),
+            ["timestamp"] = DateTime.now():ToIsoDate(),
+            ['fields'] = {
+                {
+                	['name'] = "*LISTING INFO* :",
+                    ['value'] = string.format("**Price :** %s gems \n**Amount :** %s\n**Seller :** ||%s||\n**Listing ID : ** ||%s||", tostring(gems), tostring(amount or 1), tostring(boughtFrom), tostring(uid)),
+                },
+                {
+                    ['name'] = "*USER INFO* :",
+                    ['value'] = string.format("**User :** ||%s||\n**Remaining gems :** %s", Player.Name, tostring(gemamount)),
+                },
+				{
+                    ['name'] = "*SNIPER INFO* :",
+                    ['value'] = string.format("**Status :** %s\n**Ping :** %s ms", failMessage, tostring(ping)),
+                }, 
 				},
-                    		['footer'] = {
-                        		['text'] = "V 3.2 by edmond.yv"
-                    		},
-                    		['thumbnail'] = {
-                        		['url'] = "https://cdn.discordapp.com/attachments/1057080336313495614/1190229689126621235/target_PNG42.png?ex=65a10ac7&is=658e95c7&hm=51fb914c7330c90326660077f6487ce9238a26ad483ad38bbccc41cbc216ad59&"
-                    		},
-                	},
-            	}
-        }
-        local jsonMessage = http:JSONEncode(message1)
+                	['footer'] = {
+                    ['text'] = "V 3.2 by edmond.yv"
+                },
+            ['thumbnail'] = {
+            	['url'] = "https://cdn.discordapp.com/attachments/1057080336313495614/1190229689126621235/target_PNG42.png?ex=65a10ac7&is=658e95c7&hm=51fb914c7330c90326660077f6487ce9238a26ad483ad38bbccc41cbc216ad59&"
+            },
+        },
+    }
+	}
+    local jsonMessage = http:JSONEncode(message1)
 	local success, webMessage = pcall(function()
-		http:PostAsync(webhooksnipe, jsonMessage)
-	end) 
-        if success == false then
-		local response = request({
-			Url = webhooksnipe,
-			Method = "POST",
-			Headers = {["Content-Type"] = "application/json"},
-			Body = jsonMessage
-		})
+		http:PostAsync(webhook, jsonMessage)
+	end)
+    if success == false then
+	local response = request({
+		Url = webhook,
+		Method = "POST",
+		Headers = {["Content-Type"] = "application/json"},
+		Body = jsonMessage
+	})
 	end
 end
-	
+
 local function tryPurchase(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 	local ping = Player:GetNetworkPing()
 	if buytimestamp > listTimestamp then
@@ -111,13 +111,13 @@ local function tryPurchase(uid, gems, item, version, shiny, amount, username, cl
 	local boughtPet, boughtMessage = game:GetService("ReplicatedStorage").Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 	processListingInfo(uid, gems, item, version, shiny, amount, username, boughtPet, class, boughtMessage, math.floor(ping*1000))
 end
-	
+
 Booths_Broadcast.OnClientEvent:Connect(function(username, message)
 	if type(message) == "table" then
 		local highestTimestamp = -math.huge -- Initialize with the smallest possible number
 		local key = nil
 		local listing = nil
-            	for v, value in pairs(message["Listings"] or {}) do
+        for v, value in pairs(message["Listings"] or {}) do
 			if type(value) == "table" and value["ItemData"] and value["ItemData"]["data"] then
 				local timestamp = value["Timestamp"]
 				if timestamp > highestTimestamp then
@@ -132,7 +132,7 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
 			local listTimestamp = listing["Timestamp"]
 			local data = listing["ItemData"]["data"]
 			local gems = tonumber(listing["DiamondCost"])
-            		local uid = key
+            local uid = key
 			local item = data["id"]
 			local version = data["pt"]
 			local shiny = data["sh"]
@@ -140,9 +140,9 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
 			local playerid = message['PlayerID']
 			local class = tostring(listing["ItemData"]["class"])
 			local unitGems = gems/amount
-					
+
 			print(string.format("%s listed %s %s - %s gems, %s gems/unit", tostring(username), tostring(amount), tostring(item), tostring(gems), tostring(unitGems)))
-                  
+
 			if string.find(item, "Huge") and unitGems <= 800000 then
 				coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 				return
@@ -157,18 +157,18 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
                 	    	elseif type.huge and unitGems <= 1000000 then
 					coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 					return
-				    	end
+				end
 			elseif (item == "Titanic Christmas Present" or string.find(item, "2024 New Year")) and unitGems <= 30000 then
 				coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 				return
-        	        elseif class == "Egg" and unitGems <= 30000 then
-        	        	coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
+        	elseif class == "Egg" and unitGems <= 30000 then
+        	    coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 				return
-		        elseif ((string.find(item, "Key") and not string.find(item, "Lower")) or string.find(item, "Ticket") or string.find(item, "Charm") or class == "Charm") and unitGems <= 2500 then 
-		         	coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
+		    elseif ((string.find(item, "Key") and not string.find(item, "Lower")) or string.find(item, "Ticket") or string.find(item, "Charm") or class == "Charm") and unitGems <= 2500 then
+		     	coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 				return
 			elseif class == "Enchant" and unitGems <= 30000 then
-				if item == "Fortune" then 
+				if item == "Fortune" then
 					coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 					return
 				elseif string.find(item, "Chest Mimic") then
@@ -181,37 +181,39 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
 					coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 					return
 				end
-        	        end
+        	end
 		end
-        end
+    end
 end)
 
 
-local function jumpToServer() 
+local function jumpToServer()
 	local sfUrl = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=%s&excludeFullGames=true" 
 	local req = request({ Url = string.format(sfUrl, 15502339080, "Desc", 100) }) 
 	local body = http:JSONDecode(req.Body) 
 	local deep = math.random(1, 3)
-	if deep > 1 then 
+	if deep > 1 then
         	for i = 1, deep, 1 do 
              		req = request({ Url = string.format(sfUrl .. "&cursor=" .. body.nextPageCursor, 15502339080, "Desc", 100) }) 
              		body = http:JSONDecode(req.Body) 
             		task.wait(0.1)
-        	end 
-	end 
-    	local servers = {} 
-    	if body and body.data then 
-        	for i, v in next, body.data do 
-        		if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= game.JobId then
-                		table.insert(servers, v.id)
-            		end
         	end
-    	end
-    	local randomCount = #servers
-    	if not randomCount then
+	end
+
+    local servers = {}
+    if body and body.data then
+        for i, v in next, body.data do
+        	if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= game.JobId then
+                	table.insert(servers, v.id)
+        	end
+        end
+    end
+
+    local randomCount = #servers
+    if not randomCount then
 		randomCount = 2
-    	end
-    	ts:TeleportToPlaceInstance(15502339080, servers[math.random(1, randomCount)], game:GetService("Players").LocalPlayer) 
+    end
+    ts:TeleportToPlaceInstance(15502339080, servers[math.random(1, randomCount)], game:GetService("Players").LocalPlayer) 
 end
 
 if PlayerInServer < 25 then
@@ -222,13 +224,13 @@ end
 
 for i = 1, PlayerInServer do
 	for ii = 1,#alts do
-        	if getPlayers[i].Name == alts[ii] and alts[ii] ~= Players.LocalPlayer.Name then
-            		task.wait(math.random(0, 300))
-            		while task.wait(1) do
+        if getPlayers[i].Name == alts[ii] and alts[ii] ~= Players.LocalPlayer.Name then
+        	task.wait(math.random(0, 300))
+			while task.wait(1) do
 				jumpToServer()
-	    		end
-        	end
-    	end
+	    	end
+        end
+    end
 end
 
 task.spawn(function()
@@ -256,16 +258,16 @@ Players.PlayerAdded:Connect(function(player)
 			while task.wait(1) do
 				jumpToServer()
 			end
-        	end
-    	end
-end) 
+        end
+    end
+end)
 
 local hopDelay = math.random(1000, 2000)
 
 while task.wait(1) do
 	if math.floor(os.clock() - osclock) >= hopDelay then
 		while task.wait(1) do
-			jumpToServer()		
-		end	
+			jumpToServer()
+		end
 	end
 end
