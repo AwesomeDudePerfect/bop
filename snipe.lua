@@ -259,6 +259,15 @@ for i = 1, PlayerInServer do
     end
 end
 
+task.spawn(function()
+	game:GetService("GuiService").ErrorMessageChanged:Connect(function()
+		game.Players.LocalPlayer:Kick("Found An Error, Reconnecting...")
+		print("Found An Error, Reonnecting...")
+		wait(0.1)
+		jumpToServer()
+	end);
+end)
+
 Players.PlayerRemoving:Connect(function(player)
     getPlayers = Players:GetPlayers()
     PlayerInServer = #getPlayers
