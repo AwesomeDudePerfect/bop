@@ -2615,7 +2615,7 @@ local function CompleteGame()
 end
 
 --// UI Library
-local RayField = loadstring(game:HttpGet("https://milkup.info/Rayfield/"))()
+local RayField = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
 local Window = RayField:CreateWindow({Name = "[💖] Pet Simulator X | Milk Up"..((Premium and " Premium") or ""), LoadingTitle = "Loading"..((Premium and " Premium Version") or " Free Version"), LoadingSubtitle = "Please Join The Discord If You Need Help!", ConfigurationSaving = {Enabled = true, FolderName = "MilkUp", FileName = SeparateConfigFileName}})
 
