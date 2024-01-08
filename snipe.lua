@@ -9,6 +9,7 @@ Root: kept the script uptodate
 local osclock = os.clock()
 repeat task.wait() until game:IsLoaded()
 
+setfpscap(10)
 game:GetService("RunService"):Set3dRenderingEnabled(false)
 local Booths_Broadcast = game:GetService("ReplicatedStorage").Network:WaitForChild("Booths_Broadcast")
 local Players = game:GetService('Players')
@@ -179,7 +180,7 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
 		    elseif ((string.find(item, "Key") and not string.find(item, "Lower")) or string.find(item, "Ticket") or string.find(item, "Charm") or class == "Charm") and unitGems <= 2500 then
 		     	coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 				return
-			elseif class == "Enchant" and unitGems <= 300000 then
+			elseif class == "Enchant" and unitGems <= 30000 then
 				if item == "Fortune" then
 					coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 					return
@@ -200,7 +201,6 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
 		end
     end
 end)
-
 
 local function jumpToServer()
 	local sfUrl = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=%s&excludeFullGames=true" 
@@ -229,6 +229,40 @@ local function jumpToServer()
 		randomCount = 2
     end
     ts:TeleportToPlaceInstance(15502339080, servers[math.random(1, randomCount)], game:GetService("Players").LocalPlayer) 
+end
+
+local lighting = game.Lighting
+local terrain = game.Workspace.Terrain
+terrain.WaterWaveSize = 0
+terrain.WaterWaveSpeed = 0
+terrain.WaterReflectance = 0
+terrain.WaterTransparency = 0
+lighting.GlobalShadows = false
+lighting.FogStart = 0
+lighting.FogEnd = 0
+lighting.Brightness = 0
+
+for i, v in pairs(game:GetDescendants()) do
+    if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+        v.Lifetime = NumberRange.new(0)
+    elseif v:IsA("Explosion") then
+        v.BlastPressure = 1
+        v.BlastRadius = 1
+    elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
+        v.Enabled = false
+    elseif v:IsA("MeshPart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+    end
+end
+
+for i, e in pairs(lighting:GetChildren()) do
+    if e:IsA("BlurEffect") or e:IsA("SunRaysEffect") or e:IsA("ColorCorrectionEffect") or e:IsA("BloomEffect") or e:IsA("DepthOfFieldEffect") then
+        e.Enabled = false
+    end
 end
 
 if PlayerInServer < 25 then
