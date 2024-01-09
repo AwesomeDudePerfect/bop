@@ -1,4 +1,5 @@
 repeat wait() until game:IsLoaded()
+wait(10)
 
 print('executed')
 
