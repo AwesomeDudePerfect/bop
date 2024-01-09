@@ -202,7 +202,7 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
 end)
 
 local function jumpToServer()
-	local sfUrl = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=%s&excludeFullGames=true" 
+	local sfUrl = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=%s" 
 	local req = request({ Url = string.format(sfUrl, 15502339080, "Desc", 100) }) 
 	local body = http:JSONDecode(req.Body) 
 	local deep = math.random(1, 4)
