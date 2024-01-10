@@ -1,4 +1,5 @@
 repeat wait() until game:IsLoaded()
+local pid = place or 15502339080
 wait(10)
 
 print('executed')
@@ -61,5 +62,5 @@ local function serverHop(id)
 end
 
 while wait(1) do
-	serverHop(15502339080)
+	serverHop(pid)
 end
