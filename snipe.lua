@@ -204,6 +204,7 @@ end)
 
 local function jumpToServer(id)
 	repeat
+		local deep
 		local sfUrl = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=%s" 
 		local req = request({ Url = string.format(sfUrl, id, "Desc", 100) }) 
 		local body = http:JSONDecode(req.Body)
