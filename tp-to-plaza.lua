@@ -61,5 +61,5 @@ local function serverHop(id)
 end
 
 while wait(1) do
-	serverHop(place)
+	serverHop(15502339080)
 end
