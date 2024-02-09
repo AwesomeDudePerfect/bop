@@ -156,7 +156,7 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
 
 			print(string.format("%s listed %s %s - %s gems, %s gems/unit", tostring(username), tostring(amount), tostring(item), tostring(gems), tostring(unitGems)))
 
-			if string.find(item, "Huge") and unitGems <= 800000 then
+			if string.find(item, "Huge") and unitGems <= 100 then
 				coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 				return
 			elseif class == "Pet" then
