@@ -286,10 +286,10 @@ end
 
 task.spawn(function()
 	game:GetService("GuiService").ErrorMessageChanged:Connect(function()
+		serverHop(place)
 		game.Players.LocalPlayer:Kick("Found An Error, Reconnecting...")
 		print("Found An Error, Reonnecting...")
 		wait(0.1)
-		serverHop(place)
 	end)
 end)
 
