@@ -269,7 +269,7 @@ end
 
 if PlayerInServer < 25 then
 	while task.wait(1) do
-		jumpToServer(place)
+		serverHop(place)
 	end
 end
 
@@ -278,7 +278,7 @@ for i = 1, PlayerInServer do
         if getPlayers[i].Name == alts[ii] and alts[ii] ~= Players.LocalPlayer.Name then
         	task.wait(math.random(0, 300))
 			while task.wait(1) do
-				jumpToServer(place)
+				serverHop(place)
 	    	end
         end
     end
@@ -289,7 +289,7 @@ task.spawn(function()
 		game.Players.LocalPlayer:Kick("Found An Error, Reconnecting...")
 		print("Found An Error, Reonnecting...")
 		wait(0.1)
-		jumpToServer(place)
+		serverHop(place)
 	end)
 end)
 
@@ -298,19 +298,9 @@ Players.PlayerRemoving:Connect(function(player)
 	PlayerInServer = #getPlayers
 	if PlayerInServer < 25 then
         while task.wait(1) do
-	    	jumpToServer(place)
+	    	serverHop(place)
 		end
 	end
-end)
-
-Players.PlayerAdded:Connect(function(player)
-	for i = 1,#alts do
-		if player.Name == alts[i] and alts[i] ~= Players.LocalPlayer.Name then
-			while task.wait(1) do
-				jumpToServer(place)
-			end
-        end
-    end
 end)
 
 local hopDelay = math.random(1000, 2000)
@@ -319,7 +309,7 @@ task.spawn(function ()
 	while task.wait(1) do
 		if math.floor(os.clock() - osclock) >= hopDelay then
 			while task.wait(1) do
-				jumpToServer(place)
+				serverHop(place)
 			end
 		end
 	end
