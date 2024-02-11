@@ -7,7 +7,7 @@ Root: kept the script uptodate
 ]]--
 
 local osclock = os.clock()
-repeat task.wait() until game:IsLoaded()
+repeat task.wait(1) until game:IsLoaded()
 
 game:GetService("RunService"):Set3dRenderingEnabled(false)
 local Booths_Broadcast = game:GetService("ReplicatedStorage").Network:WaitForChild("Booths_Broadcast")
@@ -16,9 +16,6 @@ local Player = Players.LocalPlayer
 local getPlayers = Players:GetPlayers()
 local PlayerInServer = #getPlayers
 local http = game:GetService("HttpService")
-local ts = game:GetService("TeleportService")
-local rs = game:GetService("ReplicatedStorage")
-local pid = place or 15502339080
 
 local vu = game:GetService("VirtualUser")
 Players.LocalPlayer.Idled:connect(function()
@@ -28,28 +25,8 @@ Players.LocalPlayer.Idled:connect(function()
 end)
 game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
 
-local character = Player.Character or Player.CharacterAdded:Wait()
-local humanoid = character:FindFirstChildWhichIsA('Humanoid')
-
-local function moveToPosition(position)
-	local moveFinished = false
-	local connection
-	connection = humanoid.MoveToFinished:Connect(function(reached)
-		moveFinished = reached
-		if connection then
-			connection:Disconnect()
-		end
-	end)
-	humanoid:MoveTo(position)
-	repeat task.wait() until moveFinished
-end
-	
-moveToPosition(Vector3.new(-970, 284, -2278))
-moveToPosition(Vector3.new(-935, 284, -2189))
-moveToPosition(Vector3.new(-919, 285, -2183))
-
 local Library = require(game.ReplicatedStorage:WaitForChild('Library'))
-	
+
 local function processListingInfo(uid, gems, item, version, shiny, amount, boughtFrom, boughtPet, class, boughtMessage, ping)
 	local gemamount = Player.leaderstats["💎 Diamonds"] and Player.leaderstats["💎 Diamonds"].Value or 0
     local versionVal = { [2] = "Rainbow", [1] = "Golden" }
@@ -106,23 +83,10 @@ end
 local function tryPurchase(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 	local ping = Player:GetNetworkPing()
 	if buytimestamp > listTimestamp then
-		task.wait(3.4 - ping)
+		task.wait(3.2 - ping)
 	end
 	local boughtPet, boughtMessage = game:GetService("ReplicatedStorage").Network.Booths_RequestPurchase:InvokeServer(playerid, uid)
 	processListingInfo(uid, gems, item, version, shiny, amount, username, boughtPet, class, boughtMessage, math.floor(ping*1000))
-end
-
-local not_allowed = {
-	"prinzemark1020",
-	"prinzemark1024",
-	"prinzemark1029",
-	"sopia_10899"
-}
-
-for _,v in ipairs(not_allowed) do
-	if Players.LocalPlayer.Name == v then
-		game:Shutdown()
-	end
 end
 
 Booths_Broadcast.OnClientEvent:Connect(function(username, message)
@@ -167,10 +131,13 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
 				elseif type.titanic and unitGems <= 10000000 then
 					coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 					return
-                	    	elseif type.huge and gems <= 1000000 then
+                elseif type.huge and gems <= 1000000 then
 					coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 					return
 				end
+			elseif gems <= 2 then
+        	    coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
+				return
 			elseif (item == "Titanic Christmas Present" or string.find(item, "2024 New Year")) and unitGems <= 30000 then
 				coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 				return
@@ -194,9 +161,6 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
 					coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
 					return
 				end
-			elseif gems <= 2 then
-        	    coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
-				return
 			end
 		end
     end
@@ -288,7 +252,6 @@ task.spawn(function()
 	game:GetService("GuiService").ErrorMessageChanged:Connect(function()
 		serverHop(place)
 		game.Players.LocalPlayer:Kick("Found An Error, Reconnecting...")
-		print("Found An Error, Reonnecting...")
 		wait(0.1)
 	end)
 end)
