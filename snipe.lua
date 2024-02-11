@@ -171,17 +171,12 @@ local function serverHop(id)
 	local HttpService = game:GetService("HttpService")
 	local TeleportService = game:GetService("TeleportService")
 	local Players = game:GetService("Players")
-	local sfUrl = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=%s"
+	local sfUrl = "https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=%s&limit=%s&excludeFullGames=true"
 	local req = request({
 		Url = string.format(sfUrl, id, "Desc", 100)
 	})
 	local body = HttpService:JSONDecode(req.Body)
 	task.wait(0.2)
-	req = request({
-		Url = string.format(sfUrl .. "&cursor=" ..body.nextPageCursor, id, "Desc", 100)
-	})
-	body = HttpService:JSONDecode(req.Body)
-	task.wait(0.1)
 	local servers = {}
 	if body and body.data then
 		for i, v in next, body.data do
