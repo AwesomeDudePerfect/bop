@@ -261,7 +261,7 @@ Players.PlayerRemoving:Connect(function(player)
 	end
 end)
 
-local hopDelay = math.random(1000, 2000)
+local hopDelay = math.random(1500, 1800)
 
 task.spawn(function ()
 	while task.wait(1) do
