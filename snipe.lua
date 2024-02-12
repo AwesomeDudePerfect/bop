@@ -66,7 +66,8 @@ local function processListingInfo(uid, gems, item, version, shiny, amount, bough
     end
 end
 
-local function tryPurchase(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp, ping)
+local function tryPurchase(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
+    local ping = Player:GetNetworkPing()
     if buytimestamp > listTimestamp then
         task.wait(3.4 - ping)
     end
