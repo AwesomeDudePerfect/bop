@@ -179,8 +179,8 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
 end)
 
 local function handlePlayerEvents()
-    local PlayerInServer = Players:GetPlayers()
-    PlayerInServer = #PlayerInServer
+    local getPlayers = Players:GetPlayers()
+    local PlayerInServer = #getPlayers
 	if PlayerInServer < 25 then
 		while task.wait(1) do
 			serverHop(place)
