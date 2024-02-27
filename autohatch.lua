@@ -100,6 +100,8 @@ for i,v in pairs(game:GetDescendants()) do
     end
 end
 
+game:GetService("RunService"):Set3dRenderingEnabled(false)
+
 while getgenv().autoHatch do
     game:GetService("ReplicatedStorage").Network.Eggs_RequestPurchase:InvokeServer(EGG_TO_HATCH, AMOUNT_TO_HATCH)
     task.wait()
