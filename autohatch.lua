@@ -1,66 +1,28 @@
-getgenv().autoHatch = true
+repeat
+    wait(1)
+until game:IsLoaded()
 
-local amountsToHatch = {
-    ["TheCoolPokeDiger13"] = 64,
-    ["ShwaDevW"] = 19,
-    ["ShwaDevY"] = 19,
-    ["ShwaDevZ"] = 19,
-    ["ShwaDev"] = 19
-    -- Add more usernames and corresponding amounts as needed
-}
+EggNumber = 113;
 
-local username = game.Players.LocalPlayer.Name
+local ReplicatedStorage = game:GetService("ReplicatedStorage") :: ReplicatedStorage & {Library: ModuleScript; Network: ModuleScript & {Eggs_RequestPurchase: RemoteFunction}}
+local Workspace = game:GetService("Workspace") :: Workspace & {__THINGS: Folder & {Eggs: Folder}}
+local Things = Workspace.__THINGS
+local Players = game:GetService("Players")
+local Player = Players.LocalPlayer :: Player & {PlayerScripts: Folder & {Scripts: Folder & {Game: Folder & {["Egg Opening Frontend"]: LocalScript}}}, Character: Model & {HumanoidRootPart: Part}}
+local Library: {Save: {Get: () -> {MaximumAvailableEgg: number; EggHatchCount: number;}}}  = require(ReplicatedStorage.Library)
+local EggsUtilMod: {GetIdByNumber: (number) -> number} = require(ReplicatedStorage.Library.Util.EggsUtil)
+local PlayerInfo = Library.Save.Get()
+local EggAnim : {PlayEggAnimation: () -> nil} = getsenv(Player.PlayerScripts.Scripts.Game["Egg Opening Frontend"])
+local Eggs: Folder = Things.Eggs:FindFirstChild("Main") or Things.Eggs:FindFirstChild("World2")
+local Egg = Eggs[EggNumber .. " - Egg Capsule"] :: Model & {Tier: Part}
+local Teleport = Egg.Tier.CFrame
 
-local AMOUNT_TO_HATCH = 64
-
-if amountsToHatch[username] then
-    AMOUNT_TO_HATCH = amountsToHatch[username]
-end
-
---anti afk shit
-game.Players.LocalPlayer.Idled:connect(function()
-    vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-    task.wait(1)
-    vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-end)
-game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
-
-local EGG_TO_HATCH = "Tech Ciruit Egg"
-
-local function getEgg()
-    local counterEggs = 113
-    while true do
-        local eggData = require(game:GetService("ReplicatedStorage").Library.Util.EggsUtil).GetByNumber(counterEggs)
-        if eggData then
-            print(eggData.name)
-            print(eggData.eggNumber)
-            if eggData.name == EGG_TO_HATCH then
-                return eggData
-            end
-            counterEggs = counterEggs + 1
-        else
-            break
-        end
-    end
-    return nil
-end
-
-local eggData = getEgg()
-local eggCFrame
-for _, v in pairs(game:GetService("Workspace").__THINGS.Eggs.World2:GetChildren()) do
-    if string.find(v.Name, tostring(eggData.eggNumber) .. " - ") then
-        eggCFrame = v.Tier.CFrame
-    end
-end
-
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = eggCFrame
-
--- disable egg animation cause its stupid asf
-hookfunction(getsenv(game.Players.LocalPlayer.PlayerScripts.Scripts.Game["Egg Opening Frontend"]).PlayEggAnimation, function()
+hookfunction(EggAnim.PlayEggAnimation, function()
     return
 end)
 
---low cpu shit
+Player.Character.HumanoidRootPart.CFrame = Teleport
+
 local Lib = require(game.ReplicatedStorage.Library)
 
 function xTab(TABLE)
@@ -102,7 +64,11 @@ end
 
 game:GetService("RunService"):Set3dRenderingEnabled(false)
 
-while getgenv().autoHatch do
-    game:GetService("ReplicatedStorage").Network.Eggs_RequestPurchase:InvokeServer(EGG_TO_HATCH, AMOUNT_TO_HATCH)
-    task.wait()
+while task.wait(0.1) do
+    local BestEggName = EggsUtilMod.GetIdByNumber(EggNumber)
+    local EggHatchCount = PlayerInfo.EggHatchCount
+
+    repeat
+        local success: boolean = ReplicatedStorage.Network.Eggs_RequestPurchase:InvokeServer(BestEggName, EggHatchCount)
+    until success
 end
