@@ -62,6 +62,13 @@ for i,v in pairs(game:GetDescendants()) do
     end
 end
 
+--anti afk shit
+game.Players.LocalPlayer.Idled:connect(function()
+    vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    task.wait(1)
+    vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
 game:GetService("RunService"):Set3dRenderingEnabled(false)
 
 while task.wait(0.1) do
