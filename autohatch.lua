@@ -84,6 +84,24 @@ game.Players.LocalPlayer.Idled:connect(function()
     task.wait(1)
     vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
 end)
+ChatProperties = {
+    Color = Color3.fromRGB(0,255,255); 
+    Font = Enum.Font.SourceSansBold;
+    TextSize = 18;
+}
+local StarterGui = game:GetService("StarterGui")
+game:GetService("Players").LocalPlayer.Idled:connect(
+    function()
+        game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame);
+        wait(0.5);
+        game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame);
+    end
+);
+local function chat(msg)
+    ChatProperties.Text = msg
+    StarterGui:SetCore("ChatMakeSystemMessage", ChatProperties)
+end
+chat("Anti Afk Enabled")
 game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Disabled = true
 game:GetService("RunService"):Set3dRenderingEnabled(false)
 
