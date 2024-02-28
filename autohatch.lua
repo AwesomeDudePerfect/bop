@@ -21,7 +21,23 @@ hookfunction(EggAnim.PlayEggAnimation, function()
     return
 end)
 
-Player.Character.HumanoidRootPart.CFrame = Teleport
+local character = Player.Character or Player.CharacterAdded:Wait()
+local humanoid = character:FindFirstChildWhichIsA('Humanoid')
+
+local function moveToPosition(position)
+    local moveFinished = false
+    local connection
+    connection = humanoid.MoveToFinished:Connect(function(reached)
+        moveFinished = reached
+        if connection then
+            connection:Disconnect()
+        end
+    end)
+    humanoid:MoveTo(position)
+    repeat task.wait() until moveFinished
+end
+    
+moveToPosition(Vector3.new(-10042.6162109375, 16.804433822631836, -315.94561767578125))
 
 local Lib = require(game.ReplicatedStorage.Library)
 
