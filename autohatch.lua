@@ -84,7 +84,7 @@ game.Players.LocalPlayer.Idled:connect(function()
     task.wait(1)
     vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
 end)
-ChatProperties = {
+local ChatProperties = {
     Color = Color3.fromRGB(0,255,255); 
     Font = Enum.Font.SourceSansBold;
     TextSize = 18;
