@@ -182,11 +182,15 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
                 coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
                 return
             elseif ((string.find(item, "Key") and not string.find(item, "Lower")) or string.find(item, "Ticket") or string.find(item, "Charm") or class == "Charm") and gems <= 200 then
+		if amount >= 10 then
+		    amount = 10
+		end
                 coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
                 return
             elseif class == "Enchant" then
                 for i, v in pairs(EnchantsPS99) do
                     if item == i and gems <= v then
+			amount = 1
                         coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
                         return
                     end
