@@ -74,8 +74,8 @@ if PlayerInServer < 25 then
 end
 
 for i = 1, PlayerInServer do
-    for _, alt in pairs(alts) do
-        if getPlayers[i].Name == alt and alt ~= Player.Name then
+    for _, alts in pairs(alt) do
+        if getPlayers[i].Name == alts and alts ~= Player.Name then
             task.wait(math.random(0, 300))
             while task.wait(1) do
                 serverHop(place)
