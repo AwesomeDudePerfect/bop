@@ -130,7 +130,7 @@ local function tryPurchase(uid, gems, item, version, shiny, amount, username, cl
     local args = {
         [1] = playerid, --sellers roblox id
         [2] = {
-            [tostring(uid)] = 1 --id of the item and the amount
+            [tostring(uid)] = amount --id of the item and the amount
         }
     }
     local ping = Player:GetNetworkPing()
@@ -191,9 +191,6 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
                         return
                     end
                 end
-            elseif gems <= 2 then
-                coroutine.wrap(tryPurchase)(uid, gems, item, version, shiny, amount, username, class, playerid, buytimestamp, listTimestamp)
-                return
             end
         end
     end
