@@ -200,6 +200,13 @@ game:GetService("Players").LocalPlayer.Idled:Connect(function()
 end)
 game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
 game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Server Closing"].Enabled = false
+local niggaJump = coroutine.create(function ()
+    while 1 do
+        wait(5)
+        game.Players.LocalPlayer.Character.Humanoid.Jump = true
+    end
+end)
+coroutine.resume(niggaJump)
 ChatProperties = {
     Color = Color3.fromRGB(0,255,255); 
     Font = Enum.Font.SourceSansBold;
