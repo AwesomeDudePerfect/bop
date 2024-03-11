@@ -33,15 +33,6 @@ local PlayerInServer = #getPlayers
 local Booths_Broadcast = ReplicatedStorage.Network:WaitForChild("Booths_Broadcast")
 local Library = require(game.ReplicatedStorage:WaitForChild('Library'))
 
---//Anti-AFK
-local virtualuser = game:GetService("VirtualUser")
-game:GetService("Players").LocalPlayer.Idled:Connect(function()
-    virtualuser:CaptureController()
-    virtualuser:ClickButton2(Vector2.new())
-end)
-game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
-game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Server Closing"].Enabled = false
-
 --// Server Check
 local function serverHop(id)
     local HttpService = game:GetService("HttpService")
@@ -200,6 +191,33 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
         end
     end
 end)
+
+--//Anti-AFK
+local virtualuser = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    virtualuser:CaptureController()
+    virtualuser:ClickButton2(Vector2.new())
+end)
+game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
+game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Server Closing"].Enabled = false
+ChatProperties = {
+    Color = Color3.fromRGB(0,255,255); 
+    Font = Enum.Font.SourceSansBold;
+    TextSize = 18;
+}
+local StarterGui = game:GetService("StarterGui")
+game:GetService("Players").LocalPlayer.Idled:connect(
+    function()
+        game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame);
+        wait(0.5);
+        game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame);
+    end
+);
+local function chat(msg)
+    ChatProperties.Text = msg
+    StarterGui:SetCore("ChatMakeSystemMessage", ChatProperties)
+end
+chat("Anti Afk Enabled")
 
 task.spawn(function()
     game:GetService("GuiService").ErrorMessageChanged:Connect(function()
