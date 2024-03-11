@@ -34,12 +34,13 @@ local Booths_Broadcast = ReplicatedStorage.Network:WaitForChild("Booths_Broadcas
 local Library = require(game.ReplicatedStorage:WaitForChild('Library'))
 
 --//Anti-AFK
-Player.Idled:Connect(function()
-    vu:CaptureController()
-    vu:ClickButton2(Vector2.new())
+local virtualuser = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    virtualuser:CaptureController()
+    virtualuser:ClickButton2(Vector2.new())
 end)
-Player.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
-Player.PlayerScripts.Scripts.Core["Server Closing"].Enabled = false
+game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
+game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Server Closing"].Enabled = false
 
 --// Server Check
 local function serverHop(id)
