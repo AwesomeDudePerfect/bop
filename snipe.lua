@@ -32,6 +32,7 @@ local PlayerInServer = #getPlayers
 
 local Booths_Broadcast = ReplicatedStorage.Network:WaitForChild("Booths_Broadcast")
 local Library = require(game.ReplicatedStorage:WaitForChild('Library'))
+local gameId = game.JobId
 
 --// Server Check
 local function serverHop(id)
@@ -56,7 +57,10 @@ local function serverHop(id)
     if not randomCount then
         randomCount = 2
     end
-    TeleportService:TeleportToPlaceInstance(id, servers[math.random(1, randomCount)], Players.LocalPlayer)
+    repeat
+        task.wait(0.1)
+        TeleportService:TeleportToPlaceInstance(id, servers[math.random(1, randomCount)], Players.LocalPlayer)
+    until game.JobId ~= gameId
 end
 
 if PlayerInServer < 25 then
@@ -192,6 +196,20 @@ Booths_Broadcast.OnClientEvent:Connect(function(username, message)
     end
 end)
 
+local hopDelay = math.random(1500, 1800)
+
+task.spawn(function ()
+    while task.wait(1) do
+        wait(10)
+        game.Players.LocalPlayer.Character.Humanoid.Jump = true
+        if math.floor(os.clock() - osclock) >= hopDelay then
+            while task.wait(1) do
+                serverHop(place)
+            end
+        end
+    end
+end)
+
 --//Anti-AFK
 local virtualuser = game:GetService("VirtualUser")
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
@@ -200,58 +218,13 @@ game:GetService("Players").LocalPlayer.Idled:Connect(function()
 end)
 game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
 game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Server Closing"].Enabled = false
-local niggaJump = coroutine.create(function ()
-    while 1 do
-        wait(5)
-        game.Players.LocalPlayer.Character.Humanoid.Jump = true
-    end
-end)
-coroutine.resume(niggaJump)
-ChatProperties = {
-    Color = Color3.fromRGB(0,255,255); 
-    Font = Enum.Font.SourceSansBold;
-    TextSize = 18;
-}
-local StarterGui = game:GetService("StarterGui")
-game:GetService("Players").LocalPlayer.Idled:connect(
-    function()
-        game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame);
-        wait(0.5);
-        game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame);
-    end
-);
-local function chat(msg)
-    ChatProperties.Text = msg
-    StarterGui:SetCore("ChatMakeSystemMessage", ChatProperties)
-end
-chat("Anti Afk Enabled")
-
-task.spawn(function()
-    game:GetService("GuiService").ErrorMessageChanged:Connect(function()
-        serverHop(place)
-        game.Players.LocalPlayer:Kick("Found An Error, Reconnecting...")
-        wait(0.1)
-    end)
-end)
 
 Players.PlayerRemoving:Connect(function(player)
-    getPlayers = Players:GetPlayers()
+    getPlayers = game:GetService('Players'):GetPlayers()
     PlayerInServer = #getPlayers
     if PlayerInServer < 25 then
         while task.wait(1) do
             serverHop(place)
-        end
-    end
-end)
-
-local hopDelay = 1140
-
-task.spawn(function ()
-    while task.wait(1) do
-        if math.floor(os.clock() - osclock) >= hopDelay then
-            while task.wait(1) do
-                serverHop(place)
-            end
         end
     end
 end)
