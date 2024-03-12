@@ -198,10 +198,15 @@ end)
 
 local hopDelay = math.random(1500, 1800)
 
-task.spawn(function ()
-    while task.wait(1) do
-        wait(10)
+local niggaJump = coroutine.create(function ()
+    while task.wait() do
+        wait(5)
         game.Players.LocalPlayer.Character.Humanoid.Jump = true
+    end
+end)
+
+local serverCheck = coroutine.create(function ()
+    while task.wait(5) do
         if math.floor(os.clock() - osclock) >= hopDelay then
             while task.wait(1) do
                 serverHop(place)
@@ -230,3 +235,7 @@ Players.PlayerRemoving:Connect(function(player)
         end
     end
 end)
+
+print('executed.')
+coroutine.resume(serverCheck)
+coroutine.resume(niggaJump)
