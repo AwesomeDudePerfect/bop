@@ -229,7 +229,6 @@ Players.PlayerRemoving:Connect(function(player)
     print('A player left.')
     getPlayers = game:GetService('Players'):GetPlayers()
     PlayerInServer = #getPlayers
-    print('Players count: ', tostring(PlayerInServer))
     if PlayerInServer < 25 then
         while task.wait(1) do
             serverHop(place)
