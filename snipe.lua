@@ -218,8 +218,10 @@ game:GetService("Players").LocalPlayer.Idled:Connect(function()
 end)
 game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
 game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Server Closing"].Enabled = false
+print('Anti-AFK enabled')
 
 Players.PlayerRemoving:Connect(function(player)
+    print('A player left.')
     getPlayers = game:GetService('Players'):GetPlayers()
     PlayerInServer = #getPlayers
     if PlayerInServer < 25 then
